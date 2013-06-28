@@ -1,4 +1,4 @@
-## Tray Checkout - PHP
+## Tray Checkout - PHP [![Build Status](https://secure.travis-ci.org/EscapeWork/tray-php.png)](http://travis-ci.org/EscapeWork/tray-php)
 
 Library PHP pra integrar com o [Tray Checkout](http://traycheckout.com.br/).
 
