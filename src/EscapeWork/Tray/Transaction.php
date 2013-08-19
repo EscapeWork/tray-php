@@ -9,34 +9,39 @@ class Transaction
     /**
      * Transactions variables
      */
-    protected 
-        $token_transaction, 
-        $order_number, 
-        $free, 
-        $transaction_id, 
-        $status_name, 
-        $status_id, 
-        $url_seller, 
-        $url_notification, 
+    protected
+        $token_transaction,
+        $order_number,
+        $free,
+        $transaction_id,
+        $status_name,
+        $status_id,
+        $url_seller,
+        $url_notification,
         $price_discount;
 
     /**
+     * URL for the action page
+     */
+    public $url;
+
+    /**
      * The payment object
-     * 
+     *
      * @var EscapeWork\Tray\Payment
      */
     public $payment;
 
     /**
      * The customer object
-     * 
+     *
      * @var EscapeWork\Tray\Customer
      */
     public $customer;
 
     /**
      * Products
-     * 
+     *
      * @var array
      */
     public $products = array();
@@ -230,6 +235,22 @@ class Transaction
     }
 
     /**
+     * Setting the URL for the action who is beign made
+     */
+    public function setUrl($url)
+    {
+        $this->url = $url;
+    }
+
+    /**
+     * Returning the URL
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
+    /**
      * Adding a new product
      */
     public function addProduct(array $params = array())
@@ -242,12 +263,13 @@ class Transaction
      */
     public function create()
     {
-        $client         = new Client();
-        $request        = $client->post(Config::getBaseURL() . Config::getCartURL(), array(), $this->getDataArray());
-        $process_result = (string) $request->send()->getBody();
+        $client  = new Client();
+        $request = $client->post(Config::getBaseURL() . Config::getCartURL(), array(), $this->getDataArray());
+        $result  = (string) $request->send()->getBody();
 
-        echo '<pre>';
-        echo htmlentities($process_result); die;
+        $xml = @simplexml_load_string($result);
+        $this->setTokenTransaction($xml->data_response->token_transaction);
+        $this->setUrl($xml->data_response->url_car);
     }
 
     /**
@@ -256,12 +278,12 @@ class Transaction
     public function getDataArray()
     {
         $data = array(
-            'token_account'      => Config::getTokenAccount(), 
-            'url_seller'         => $this->getUrlSeller(), 
-            'price_discount'     => $this->getPriceDiscount(), 
-            'postal_code_seller' => '91780010', 
-            'shipping_type'      => 'Frete Grátis', 
-            'shipping_price'     => '0', 
+            'token_account'      => Config::getTokenAccount(),
+            'url_seller'         => $this->getUrlSeller(),
+            'price_discount'     => $this->getPriceDiscount(),
+            'postal_code_seller' => '91780010',
+            'shipping_type'      => 'Frete Grátis',
+            'shipping_price'     => '0',
         );
 
         return array_merge($data, $this->getProductsDataArray());
@@ -276,11 +298,11 @@ class Transaction
 
         foreach ($this->products as $product) {
             $products = array(
-                'transaction_product[][code]'        => $product->getCode(), 
-                'transaction_product[][description]' => $product->getDescription(), 
-                'transaction_product[][quantity]'    => $product->getQuantity(), 
-                'transaction_product[][price_unit]'  => $product->getPriceUnit(), 
-                'transaction_product[][sku_code]'    => $product->getSkuCode(), 
+                'transaction_product[][code]'        => $product->getCode(),
+                'transaction_product[][description]' => $product->getDescription(),
+                'transaction_product[][quantity]'    => $product->getQuantity(),
+                'transaction_product[][price_unit]'  => $product->getPriceUnit(),
+                'transaction_product[][sku_code]'    => $product->getSkuCode(),
             );
         }
 
