@@ -74,6 +74,26 @@ class Product
         if (isset($params['quantity'])) {
             $this->setQuantity($params['quantity']);
         }
+
+        if (isset($params['price_unit'])) {
+            $this->setPriceUnit($params['price_unit']);
+        }
+
+        if (isset($params['code'])) {
+            $this->setCode($params['code']);
+        }
+
+        if (isset($params['extra'])) {
+            $this->setExtra($params['extra']);
+        }
+
+        if (isset($params['url_img'])) {
+            $this->setUrlImg($params['url_img']);
+        }
+
+        if (isset($params['sku_code'])) {
+            $this->setSkuCode($params['sku_code']);
+        }
     }
 
     public function setDescription($description)
@@ -116,5 +136,56 @@ class Product
     {
         $this->sku_code = $sku_code;
         return $this;
+    }
+
+    public function getDescription()
+    {
+        return $this->description;
+    }
+
+    public function getQuantity()
+    {
+        return $this->quantity;
+    }
+
+    public function getPriceUnit()
+    {
+        return $this->price_unit;
+    }
+
+    public function getCode()
+    {
+        return $this->code;
+    }
+
+    public function getExtra()
+    {
+        return $this->extra;
+    }
+
+    public function getUrlImg()
+    {
+        return $this->url_img;
+    }
+
+    public function getSkuCode()
+    {
+        return $this->sku_code;
+    }
+
+    /**
+     * Serializing the product
+     */
+    public function __toString()
+    {
+        return array(
+            'description' => $this->getDescription(),
+            'quantity'    => $this->getQuantity(),
+            'price_unit'  => $this->getPriceUnit(),
+            'code'        => $this->getCode(),
+            'extra'       => $this->getExtra(),
+            'url_img'     => $this->getUrlImg(),
+            'sku_code'    => $this->getSkuCode(),
+        );
     }
 }

@@ -1,5 +1,6 @@
 <?php namespace EscapeWork\Tray;
 
+use Guzzle\Http\Client;
 use InvalidArgumentException;
 
 class Transaction
@@ -14,7 +15,10 @@ class Transaction
         $free, 
         $transaction_id, 
         $status_name, 
-        $status_id;
+        $status_id, 
+        $url_seller, 
+        $url_notification, 
+        $price_discount;
 
     /**
      * The payment object
@@ -159,6 +163,57 @@ class Transaction
     }
 
     /**
+     * Setting the url_seller
+     */
+    public function setUrlSeller($url_seller)
+    {
+        $this->url_seller = $url_seller;
+        return $this;
+    }
+
+    /**
+     * Getting the url_seller
+     */
+    public function getUrlSeller()
+    {
+        return $this->url_seller;
+    }
+
+    /**
+     * Setting the url_notification
+     */
+    public function setUrlNotification($url_notification)
+    {
+        $this->url_notification = $url_notification;
+        return $this;
+    }
+
+    /**
+     * Getting the url_notification
+     */
+    public function getUrlNotification()
+    {
+        return $this->url_notification;
+    }
+
+    /**
+     * Setting the price_discount
+     */
+    public function setPriceDiscount($price_discount)
+    {
+        $this->price_discount = $price_discount;
+        return $this;
+    }
+
+    /**
+     * Getting the price_discount
+     */
+    public function getPriceDiscount()
+    {
+        return $this->price_discount;
+    }
+
+    /**
      * Setting the payment object
      */
     public function setPayment(Payment $payment)
@@ -183,10 +238,52 @@ class Transaction
     }
 
     /**
-     * Creating the transaction
+     * Creating the temporary cary
      */
     public function create()
     {
-        # $cURL = cur
+        $client         = new Client();
+        $request        = $client->post(Config::getBaseURL() . Config::getCartURL(), array(), $this->getDataArray());
+        $process_result = (string) $request->send()->getBody();
+
+        echo '<pre>';
+        echo htmlentities($process_result); die;
+    }
+
+    /**
+     * Returning the array of the data for
+     */
+    public function getDataArray()
+    {
+        $data = array(
+            'token_account'      => Config::getTokenAccount(), 
+            'url_seller'         => $this->getUrlSeller(), 
+            'price_discount'     => $this->getPriceDiscount(), 
+            'postal_code_seller' => '91780010', 
+            'shipping_type'      => 'Frete Grátis', 
+            'shipping_price'     => '0', 
+        );
+
+        return array_merge($data, $this->getProductsDataArray());
+    }
+
+    /**
+     * Returning the products data array
+     */
+    protected function getProductsDataArray()
+    {
+        $products = array();
+
+        foreach ($this->products as $product) {
+            $products = array(
+                'transaction_product[][code]'        => $product->getCode(), 
+                'transaction_product[][description]' => $product->getDescription(), 
+                'transaction_product[][quantity]'    => $product->getQuantity(), 
+                'transaction_product[][price_unit]'  => $product->getPriceUnit(), 
+                'transaction_product[][sku_code]'    => $product->getSkuCode(), 
+            );
+        }
+
+        return $products;
     }
 }
