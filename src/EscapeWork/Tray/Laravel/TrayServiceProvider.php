@@ -8,7 +8,7 @@ class TrayServiceProvider extends ServiceProvider
 
     public function register()
     {
-        Config::$token_account = \Config::get('tray.token_account');
-        Config::$environment   = \Config::get('tray.environment');
+        Config::$token_account = $this->app['config']['tray.token_account'];
+        Config::$environment   = $this->app['config']['tray.environment'];
     }
 }

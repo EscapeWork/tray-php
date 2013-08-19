@@ -14,6 +14,14 @@ Adiciona a linha abaixo no seu `composer.json` e execute um `composer update`.
     }
 ```
 
+### Notificação de Status
+
+
+
+### Referências
+
+* https://static.traycheckout.com.br/pdf/TrayCheckout-Manual-v1.0.pdf
+
 ### Licença
 
 MIT License.
