@@ -2,3 +2,4 @@ logs
 bin/
 vendor/
 *.jpg
+*.sublime-workspace
