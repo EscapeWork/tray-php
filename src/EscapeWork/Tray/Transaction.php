@@ -18,7 +18,10 @@ class Transaction
         $status_id,
         $url_seller,
         $url_notification,
-        $price_discount;
+        $price_discount,
+        $postal_code_seller,
+        $shipping_type,
+        $shipping_price;
 
     /**
      * URL for the action page
@@ -251,6 +254,57 @@ class Transaction
     }
 
     /**
+     * Setting the postal_code_seller element
+     */
+    public function setPostalCodeSeller($postal_code_seller)
+    {
+        $this->postal_code_seller = $postal_code_seller;
+        return $this;
+    }
+
+    /**
+     * Getting the postal_code_seller field
+     */
+    public function getPostalCodeSeller()
+    {
+        return $this->postal_code_seller;
+    }
+
+    /**
+     * Setting the shipping_type element
+     */
+    public function setShippingType($shipping_type)
+    {
+        $this->shipping_type = $shipping_type;
+        return $this;
+    }
+
+    /**
+     * Getting the shipping_type field
+     */
+    public function getShippingType()
+    {
+        return $this->shipping_type;
+    }
+
+    /**
+     * Setting the shipping_price element
+     */
+    public function setShippingPrice($shipping_price)
+    {
+        $this->shipping_price = $shipping_price;
+        return $this;
+    }
+
+    /**
+     * Getting the shipping_type field
+     */
+    public function getShippingPrice()
+    {
+        return $this->shipping_price;
+    }
+
+    /**
      * Adding a new product
      */
     public function addProduct(array $params = array())
@@ -281,9 +335,9 @@ class Transaction
             'token_account'      => Config::getTokenAccount(),
             'url_seller'         => $this->getUrlSeller(),
             'price_discount'     => $this->getPriceDiscount(),
-            'postal_code_seller' => '91780010',
-            'shipping_type'      => 'Frete Grátis',
-            'shipping_price'     => '0',
+            'postal_code_seller' => $this->getPostalCodeSeller(),
+            'shipping_type'      => $this->getShippingType(),
+            'shipping_price'     => $this->getShippingPrice(),
         );
 
         return array_merge($data, $this->getProductsDataArray());
