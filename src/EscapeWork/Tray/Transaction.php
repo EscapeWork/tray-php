@@ -55,6 +55,15 @@ class Transaction
     const MAX_TOKEN_TRANSACTION_CHARACTERS = 32;
 
     /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->payment  = new Payment();
+        $this->customer = new Customer();
+    }
+
+    /**
      * Setting the transaction token
      */
     public function setTokenTransaction($token_transaction)
@@ -313,20 +322,6 @@ class Transaction
     }
 
     /**
-     * Creating the temporary cary
-     */
-    public function create()
-    {
-        $client  = new Client();
-        $request = $client->post(Config::getBaseURL() . Config::getCartURL(), array(), $this->getDataArray());
-        $result  = (string) $request->send()->getBody();
-
-        $xml = @simplexml_load_string($result);
-        $this->setTokenTransaction($xml->data_response->token_transaction);
-        $this->setUrl($xml->data_response->url_car);
-    }
-
-    /**
      * Returning the array of the data for
      */
     public function getDataArray()
@@ -361,5 +356,90 @@ class Transaction
         }
 
         return $products;
+    }
+
+    /**
+     * Creating the temporary cary
+     */
+    public function create()
+    {
+        $client  = $this->createClient();
+        $request = $client->post(Config::getBaseURL() . Config::getCartURL(), array(), $this->getDataArray());
+        $xml     = $this->buildXML((string) $request->send()->getBody());
+
+        if ($xml->message_response->message !== 'success') {
+            throw new TrayException('Notification error');
+        }
+
+        $this->setTokenTransaction($xml->data_response->token_transaction);
+        $this->setUrl($xml->data_response->url_car);
+    }
+
+    /**
+     * Making a request to get the notification
+     */
+    public function notification()
+    {
+        $data = array(
+            'token_account'     => Config::getTokenAccount(),
+            'token_transaction' => $this->getTokenTransaction(),
+        );
+
+        $client   = $this->createClient();
+        $request  = $client->post(Config::getBaseURL() . Config::getNotificationURL(), array(), $data);
+        $response = $this->buildXML((string) $request->send()->getBody());
+
+        if ($response->message_response->message !== 'success') {
+            throw new TrayException('Notification error');
+        }
+
+        $this->setDataFromObject($response);
+    }
+
+    /**
+     * Create the HTTP client
+     */
+    public function createClient()
+    {
+        return new Client();
+    }
+
+    /**
+     * Building the XML
+     */
+    public function buildXML($xmlString)
+    {
+        return @simplexml_load_string($result);
+    }
+
+    /**
+     * Setting the transaction data from an PHP object
+     *
+     * @param   stdClass $response
+     * @return  void
+     */
+    public function setDataFromObject($response)
+    {
+        $transaction = $response->data_response->transaction;
+
+        $this->setOrderNumber($transaction->order_number);
+        $this->setFree($transaction->free);
+        $this->setTransactionId($transaction->transaction_id);
+        $this->setStatusId($transaction->status_id);
+        $this->setStatusName($transaction->status_name);
+        $this->setTokenTransaction($transaction->token_transaction);
+
+        # payment
+        $this->payment->setPricePayment($transaction->payment->price_payment);
+        $this->payment->setPaymentResponse($transaction->payment->payment_response);
+        $this->payment->setUrlPayment($transaction->payment->url_payment);
+        $this->payment->setTid($transaction->payment->tid);
+        $this->payment->setSplit($transaction->payment->split);
+        $this->payment->setPaymentMethodId($transaction->payment->payment_method_id);
+        $this->payment->setPaymentMethodName($transaction->payment->payment_method_name);
+        $this->payment->setLinhaDigitavel($transaction->payment->linha_digitavel);
+
+        # customer
+        $this->customer;
     }
 }

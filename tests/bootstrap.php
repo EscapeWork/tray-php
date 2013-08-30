@@ -1,4 +1,4 @@
-<?php 
+<?php
 define('DS', DIRECTORY_SEPARATOR);
 define('APP_ROOT', realpath(__DIR__ . DS . '..'));
 define('DIR', APP_ROOT);
@@ -11,4 +11,4 @@ ini_set('error_log', DIR . DS . 'logs' . DS . date('Y-m-d') . '.log');
 
 error_reporting(E_ALL | E_STRICT);
 
-include_once( APP_ROOT . DS . 'vendor' . DS . 'autoload.php' );
+include_once(APP_ROOT . DS . 'vendor' . DS . 'autoload.php');
