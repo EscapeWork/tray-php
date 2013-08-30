@@ -438,8 +438,5 @@ class Transaction
         $this->payment->setPaymentMethodId($transaction->payment->payment_method_id);
         $this->payment->setPaymentMethodName($transaction->payment->payment_method_name);
         $this->payment->setLinhaDigitavel($transaction->payment->linha_digitavel);
-
-        # customer
-        $this->customer;
     }
 }
