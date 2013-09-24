@@ -367,7 +367,7 @@ class Transaction
         $request = $client->post(Config::getBaseURL() . Config::getCartURL(), array(), $this->getDataArray());
         $xml     = $this->buildXML((string) $request->send()->getBody());
 
-        if ($xml->message_response->message !== 'success') {
+        if ((string) $xml->message_response->message !== 'success') {
             throw new TrayException('Notification error');
         }
 
@@ -389,7 +389,7 @@ class Transaction
         $request  = $client->post(Config::getBaseURL() . Config::getNotificationURL(), array(), $data);
         $response = $this->buildXML((string) $request->send()->getBody());
 
-        if ($response->message_response->message !== 'success') {
+        if ((string) $response->message_response->message !== 'success') {
             throw new TrayException('Notification error');
         }
 
