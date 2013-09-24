@@ -409,7 +409,7 @@ class Transaction
      */
     public function buildXML($xmlString)
     {
-        return @simplexml_load_string($result);
+        return @simplexml_load_string($xmlString);
     }
 
     /**
