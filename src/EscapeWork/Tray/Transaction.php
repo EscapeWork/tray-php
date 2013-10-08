@@ -333,6 +333,7 @@ class Transaction
             'postal_code_seller' => $this->getPostalCodeSeller(),
             'shipping_type'      => $this->getShippingType(),
             'shipping_price'     => $this->getShippingPrice(),
+            'url_notification'   => $this->getUrlNotification(),
         );
 
         return array_merge($data, $this->getProductsDataArray());
