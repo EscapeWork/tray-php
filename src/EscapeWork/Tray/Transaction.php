@@ -123,9 +123,9 @@ class Transaction
      */
     public function setTransactionId($transaction_id)
     {
-        $this->transaction_id = $transaction_id;
+        $this->transaction_id = (int) $transaction_id;
 
-        if (! is_numeric($this->transaction_id)) {
+        if (! is_int($this->transaction_id)) {
             throw new InvalidArgumentException('transaction_id ('.$transaction_id.') precisa ser um número inteiro.');
         }
 
