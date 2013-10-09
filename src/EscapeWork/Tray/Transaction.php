@@ -334,6 +334,7 @@ class Transaction
             'shipping_type'      => $this->getShippingType(),
             'shipping_price'     => $this->getShippingPrice(),
             'url_notification'   => $this->getUrlNotification(),
+            'order_number'       => $this->getOrderNumber(),
         );
 
         return array_merge($data, $this->getProductsDataArray());
