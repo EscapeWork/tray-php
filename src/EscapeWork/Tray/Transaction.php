@@ -126,7 +126,7 @@ class Transaction
         $this->transaction_id = $transaction_id;
 
         if (! is_numeric($this->transaction_id)) {
-            throw new InvalidArgumentException('transaction_id precisa ser um número inteiro.');
+            throw new InvalidArgumentException('transaction_id ('.$transaction_id.') precisa ser um número inteiro.');
         }
 
         return $this;
