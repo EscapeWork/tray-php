@@ -162,10 +162,10 @@ class Transaction
      */
     public function setStatusId($status_id)
     {
-        $this->status_id = $status_id;
+        $this->status_id = (int) $status_id;
 
         if (! is_numeric($this->status_id)) {
-            throw new InvalidArgumentException('status_id precisa ser um número inteiro.');
+            throw new InvalidArgumentException('status_id ('.$status_id.') precisa ser um número inteiro.');
         }
 
         return $this;

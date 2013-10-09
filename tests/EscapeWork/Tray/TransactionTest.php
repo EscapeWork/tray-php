@@ -47,15 +47,6 @@ class TransactionTest extends TestCase
         $this->assertEquals(12345, $transaction->getTransactionId());
     }
 
-    /**
-     * @expectedException InvalidArgumentException
-     */
-    public function test_set_transaction_id_with_invalid_token_should_throw_an_exception()
-    {
-        $transaction = new Transaction();
-        $transaction->setTransactionId('adsda');
-    }
-
     public function test_set_status_name_works()
     {
         $transaction = new Transaction();
@@ -70,15 +61,6 @@ class TransactionTest extends TestCase
         $transaction->setStatusId(12345);
 
         $this->assertEquals(12345, $transaction->getStatusId());
-    }
-
-    /**
-     * @expectedException InvalidArgumentException
-     */
-    public function test_set_status_id_with_invalid_token_should_throw_an_exception()
-    {
-        $transaction = new Transaction();
-        $transaction->setStatusId('adsda');
     }
 
     /**
